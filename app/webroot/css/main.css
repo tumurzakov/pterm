@@ -1,0 +1,53 @@
+.actions a {
+        margin: 10px;
+}
+
+.paging .prev {
+        margin: 10px;
+}
+
+.paging .next {
+        margin: 10px;
+}
+
+.paging .numbers {
+        text-align: center;
+}
+
+.actions li {
+        display: inline-block;
+}
+
+.datetime select, .date select {
+    width: auto !important;
+    display: inline;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+dl {
+    line-height: 2em;
+    width: 60%;
+    margin-bottom: 0em !important;
+    padding: 0px;
+}
+dl dd:nth-child(4n+2),
+dl dt:nth-child(4n+1) {
+    background: #f4f4f4;
+}
+
+dt {
+    font-weight: bold;
+    vertical-align: top;
+    padding: 0px;
+    margin-bottom: 0em !important;
+}
+
+dd {
+    margin-left: 20em;
+    margin-top: -2em;
+    vertical-align: top;
+    padding: 0px;
+    margin-bottom: 0em !important;
+}
+

@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS `variables` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
   `value` varchar(255) default NULL,
-  `created` timestamp NOT NULL,
-  `modified` timestamp NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS `neotech_requests` (
   `terminal_id` int(11) NOT NULL,
   `qid` varchar(32) NOT NULL,
   `body` text NOT NULL,
-  `created` timestamp NOT NULL,
-  `modified` timestamp NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `qid` (`qid`,`terminal_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS `neotech_responses` (
   `terminal_id` int(11) NOT NULL,
   `qid` varchar(32) NOT NULL,
   `body` text NOT NULL,
-  `created` timestamp NOT NULL,
-  `modified` timestamp NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `qid` (`qid`,`terminal_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
@@ -72,13 +72,13 @@ CREATE TABLE IF NOT EXISTS `payments` (
   `receipt` varchar(50) NOT NULL,
   `account` varchar(50) NOT NULL,
   `amount` double NOT NULL,
-  `provider_date` timestamp NOT NULL,
+  `provider_date` datetime NOT NULL,
   `status` varchar(20) default NULL,
   `service_id` int(11) NOT NULL,
   `ip` varchar(15) NOT NULL,
   `reqid` varchar(50) NOT NULL,
-  `created` timestamp NOT NULL,
-  `modified` timestamp NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS `terminals` (
   `name` varchar(100) NOT NULL,
   `active` int(11) NOT NULL default '1',
   `deposit` int(11) NOT NULL,
-  `created` timestamp NOT NULL,
-  `modified` timestamp NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
@@ -111,8 +111,24 @@ CREATE TABLE IF NOT EXISTS `events` (
   `account` varchar(50) NOT NULL,
   `terminal_id` int(11) NOT NULL,
   `description` text NOT NULL,
-  `created` timestamp NOT NULL,
-  `modified` timestamp NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `events_idx` (`created`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+--
+-- Структура таблицы `services`
+--
+
+DROP TABLE IF EXISTS `services`;
+CREATE TABLE IF NOT EXISTS `services` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL,
+  `active` int(11) NOT NULL default '1',
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------

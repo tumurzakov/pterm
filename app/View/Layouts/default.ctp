@@ -52,13 +52,12 @@
 
                 <section class="top-bar-section">
                     <ul class="left">
-                        <li><a href="#">Correction</a></li>
+                        <li><?php echo $this->Html->link(__('Payments'), array('controller'=>'payments', 'action'=>'index')); ?></li>
 
                         <li class="has-dropdown">
                             <a href="#">Reports</a>
                             <ul class="dropdown">
                                 <li><a href="#">Summary</a></li>
-                                <li><a href="#">Payments</a></li>
                                 <li><a href="#">Events</a></li>
                             </ul>
                         </li>

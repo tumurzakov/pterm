@@ -19,6 +19,17 @@ class NeotechShell extends AppShell {
         $this->request($url, $request);
     }
 
+    public function cancel() {
+        if (count($this->args) != 3) return;
+        list($url, $qid, $account) = $this->args;
+        $this->out("Validate [url=$url qid=$qid cancel=$cancel]");
+
+        $request = 
+            "<?xml version='1.0'?><XML><BODY QID='$cancel'/>".
+            "<HEAD OP='PR09' SID='OSPP' QID='$qid'/></XML>";
+        $this->request($url, $request);
+    }
+
     public function pay() {
         if (count($this->args) != 5) return;
         list($url, $qid, $account, $amount, $date) = $this->args;
