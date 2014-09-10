@@ -14,6 +14,7 @@ class PaymentsController extends AppController {
 	public $components = array('Paginator', 'Session');
 
 	public function index() {
+        $this->Paginator->settings = array('order'=>array('Payment.id'=>'desc'));
         if ($this->request->is('post')) {
             $filter = array();
 

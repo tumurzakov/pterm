@@ -68,6 +68,7 @@
                             <ul class="dropdown">
                                 <li><?php echo $this->Html->link(__('Terminals'), array('controller'=>'terminals', 'action'=>'index')); ?></li>
                                 <li><?php echo $this->Html->link(__('Services'), array('controller'=>'services', 'action'=>'index')); ?></li>
+                                <li><?php echo $this->Html->link(__('Users'), array('controller'=>'users', 'action'=>'index')); ?></li>
                             </ul>
                         </li>
                     </ul>
