@@ -1,4 +1,10 @@
 <?php
+/*
+ * @author     Umurzakov Temir <temir@umurzakov.com>
+ * @link       https://github.com/tumurzakov/pterm.git
+ *
+*/
+
 class Payment extends AppModel {
 
     public $belongsTo = array('Terminal', 'Service');
@@ -32,7 +38,24 @@ class Payment extends AppModel {
             throw new Exception("Payment not found");
         }
 
-        $payment['status'] = 'not canceled';
-        $this->save($payment);
+        $this->cancelById($payment['Payment']['id']);
+    }
+
+    public function cancelById($id) {
+        $this->id = $id;
+        $this->setField('status', 'not canceled');
+    }
+
+    public function transfer($id, $account) {
+        $payment = $this->read(null, $id);
+        $this->setField('status', 'not canceled');
+
+        unset($payment['Payment']['id']);
+        $payment['Payment']['account'] = $account;
+        $payment['Payment']['status'] = 'not confirmed';
+
+        $this->create();
+        $this->set($payment['Payment']);
+        $this->save();
     }
 }

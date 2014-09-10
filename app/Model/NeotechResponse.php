@@ -1,4 +1,10 @@
 <?php
+/*
+ * @author     Umurzakov Temir <temir@umurzakov.com>
+ * @link       https://github.com/tumurzakov/pterm.git
+ *
+*/
+
 App::uses('PaymentLog', 'Lib');
 class NeotechResponse extends AppModel {
     public function get($terminal_id, $qid) {

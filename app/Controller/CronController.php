@@ -1,4 +1,10 @@
 <?php
+/*
+ * @author     Umurzakov Temir <temir@umurzakov.com>
+ * @link       https://github.com/tumurzakov/pterm.git
+ *
+*/
+
 App::uses('Application', 'Lib');
 class CronController extends AppController {
     public $uses = array('Payment');

@@ -47,28 +47,27 @@
                         <h1><a href="#">Terminal</a></h1>
                     </li>
 
-                    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+                    <li class="toggle-topbar menu-icon"><a href="#"><span><?php echo __('Menu'); ?></span></a></li>
                 </ul>
 
                 <section class="top-bar-section">
                     <ul class="left">
-                        <li><?php echo $this->Html->link(__('Payments'), array('controller'=>'payments', 'action'=>'index')); ?></li>
+
+                        <li><?php echo $this->Html->link(__('Summary'), array('controller'=>'payments', 'action'=>'summary')); ?></li>
 
                         <li class="has-dropdown">
-                            <a href="#">Reports</a>
+                            <a href="#"><?php echo __('Reports'); ?></a>
                             <ul class="dropdown">
-                                <li><a href="#">Summary</a></li>
-                                <li><a href="#">Events</a></li>
+                                <li><?php echo $this->Html->link(__('Payments'), array('controller'=>'payments', 'action'=>'index')); ?></li>
+                                <li><?php echo $this->Html->link(__('Events'), array('controller'=>'events', 'action'=>'index')); ?></li>
                             </ul>
                         </li>
 
                         <li class="has-dropdown">
-                            <a href="#">Config</a>
+                            <a href="#"><?php echo __('Config'); ?></a>
                             <ul class="dropdown">
-                                <li><a href="#">Variables</a></li>
-                                <li><a href="#">Terminals</a></li>
-                                <li><a href="#">Neotech requests</a></li>
-                                <li><a href="#">Neotech responses</a></li>
+                                <li><?php echo $this->Html->link(__('Terminals'), array('controller'=>'terminals', 'action'=>'index')); ?></li>
+                                <li><?php echo $this->Html->link(__('Services'), array('controller'=>'services', 'action'=>'index')); ?></li>
                             </ul>
                         </li>
                     </ul>

@@ -5,7 +5,7 @@ App::uses('PaymentLog', 'Lib');
 
 class NeotechController extends AppController {
 
-    public $uses = array('NeotechRequest', 'NeotechResponse', 'Payment');
+    public $uses = array('NeotechRequest', 'NeotechResponse', 'Payment', 'Event');
 
     protected $sid = "";
     protected $terminal_id = 0;
@@ -123,33 +123,53 @@ class NeotechController extends AppController {
 
     protected function check($service_id, $account) {
         PaymentLog::log("Processing cancelation $service_id, $account");
+
+        $result = array(200, "SUCCESS");
+
         $app = new Application();
         try {
             $app->check($account);
         } catch (Exception $e) {
-            return array(420, "ACCOUNT NOT FOUND");
+            $result =  array(420, "ACCOUNT NOT FOUND");
         }
-        return array(200, "SUCCESS");
+
+        $this->Event->add($this->terminal_id, $service_id, $account, __('Validation -> %s', $result[1]));
+
+        return $result;
     }
 
     protected function pay($qid, $service_id, $account, $amount, $provider_date) {
         PaymentLog::log("Processing payment $qid, $service_id, $account, $amount, $provider_date");
+
+        $result = array(250, "SUCCESS");
+
         $payment = compact('service_id', 'account', 'amount', 'provider_date');
         $payment['receipt'] = $qid;
         $payment['reqid'] = CakeSession::read('reqid');
         $payment['terminal_id'] = $this->terminal_id;
         $payment['ip'] = $_SERVER['REMOTE_ADDR'];
         $this->Payment->add($payment);
-        return array(250, "SUCCESS");
+
+        $this->Event->add($this->terminal_id, $service_id, $account, __('Payment (amount=%.2f) -> %s', $amount, $result[1]));
+
+        return $result;
     }
 
     protected function cancel($qid) {
         PaymentLog::log("Processing cancelation $qid");
+
+        $result = array(250, "SUCCESS");
+        $account  = "";
+
         try {
-            $this->Payment->cancel($this->terminal_id, $qid);
+            $payment = $this->Payment->cancel($this->terminal_id, $qid);
+            $account = $payment['Payment']['account'];
         } catch(Exception $e) {
-            return array(420, $e->getMessage());
+            $result = array(420, $e->getMessage());
         }
-        return array(250, "SUCCESS");
+
+        $this->Event->add($this->terminal_id, $service_id, $account, __('Cancelation -> %s', $result[1]));
+
+        return $result;
     }
 }

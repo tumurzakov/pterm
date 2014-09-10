@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `terminals` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(100) NOT NULL,
   `active` int(11) NOT NULL default '1',
-  `deposit` int(11) NOT NULL,
+  `deposit` int(11) NOT NULL default 0,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   PRIMARY KEY  (`id`)
@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `events` (
   `id` bigint(20) NOT NULL auto_increment,
   `account` varchar(50) NOT NULL,
   `terminal_id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
   `description` text NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,

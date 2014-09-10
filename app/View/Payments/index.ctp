@@ -76,8 +76,8 @@
         $to = strftime("%F", strtotime("+1 month", strtotime($from)));
 
         echo $this->Form->create(array('action'=>'index')); 
-        echo $this->Form->input('terminal_id');
-        echo $this->Form->input('service_id');
+        echo $this->Form->input('terminal_id', array('empty' => array(0 => '')));
+        echo $this->Form->input('service_id', array('empty' => array(0 => '')));
         echo $this->Form->input('account');
         echo $this->Form->input('from', array('type'=>'date', 'dateFormat'=>'DMY', 'default'=>$from));
         echo $this->Form->input('to', array('type'=>'date', 'dateFormat'=>'DMY', 'default'=>$to));

@@ -21,6 +21,11 @@
 			<?php echo $this->Html->link($payment['Terminal']['name'], array('controller' => 'terminals', 'action' => 'view', $payment['Terminal']['id'])); ?>
 			&nbsp;
 		</dd>
+		<dt><?php echo __('Service'); ?></dt>
+		<dd>
+			<?php echo $this->Html->link($payment['Service']['name'], array('controller' => 'services', 'action' => 'view', $payment['Service']['id'])); ?>
+			&nbsp;
+		</dd>
 		<dt><?php echo __('Receipt'); ?></dt>
 		<dd>
 			<?php echo h($payment['Payment']['receipt']); ?>
@@ -44,11 +49,6 @@
 		<dt><?php echo __('Status'); ?></dt>
 		<dd>
 			<?php echo h($payment['Payment']['status']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Service'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($payment['Service']['name'], array('controller' => 'services', 'action' => 'view', $payment['Service']['id'])); ?>
 			&nbsp;
 		</dd>
 		<dt><?php echo __('Ip'); ?></dt>

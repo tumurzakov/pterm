@@ -1,4 +1,10 @@
 <?php
+/*
+ * @author     Umurzakov Temir <temir@umurzakov.com>
+ * @link       https://github.com/tumurzakov/pterm.git
+ *
+*/
+
 class NeotechShell extends AppShell {
     public function main() {
         $this->out('Neotech protocol client');
@@ -14,7 +20,7 @@ class NeotechShell extends AppShell {
         $this->out("Validate [url=$url qid=$qid account=$account]");
 
         $request = 
-            "<?xml version='1.0'?><XML><BODY  SERVICE_ID='0' PARAM1='$account'/>".
+            "<?xml version='1.0'?><XML><BODY  SERVICE_ID='1' PARAM1='$account'/>".
             "<HEAD OP='QE11' SID='OSPP' QID='$qid'/></XML>";
         $this->request($url, $request);
     }
@@ -36,7 +42,7 @@ class NeotechShell extends AppShell {
         $this->out("Validate [url=$url qid=$qid account=$account amount=$amount date=$date]");
 
         $request = 
-            "<?xml version='1.0'?><XML><BODY  SERVICE_ID='0' SUM='$amount' PARAM1='$account'/>".
+            "<?xml version='1.0'?><XML><BODY SERVICE_ID='1' SUM='$amount' PARAM1='$account'/>".
             "<HEAD OP='QE10' SID='OSPP' QID='$qid' DTS='$date'/></XML>";
         $this->request($url, $request);
     }

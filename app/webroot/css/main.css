@@ -51,3 +51,26 @@ dd {
     margin-bottom: 0em !important;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: center;
+}
+
+td,th {
+    font-size: 0.8em !important;
+    vertical-align: middle !important;
+    border: 1px solid #888 !important;
+}
+
+th {
+    border: 1px solid #888 !important;
+}
+
+table {
+    border: 1px solid #888 !important;
+}
+
