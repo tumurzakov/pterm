@@ -1,0 +1,306 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2014-09-12 01:03+0600\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Controller/EventsController.php:21
+msgid "Invalid event"
+msgstr "Некорректное событие"
+
+#: Controller/PaymentsController.php:54
+msgid "Invalid payment"
+msgstr "Некорректный платеж"
+
+#: Controller/PaymentsController.php:77
+msgid "Manual cancelation"
+msgstr "Ручная корректировка"
+
+#: Controller/PaymentsController.php:115
+msgid "Transfer to %s"
+msgstr "Корректировка на %s"
+
+#: Controller/UsersController.php:38;70;95
+msgid "Invalid user"
+msgstr "Некорректный пользователь"
+
+#: Controller/UsersController.php:53;74
+msgid "The user has been saved."
+msgstr "Пользователь сохранен"
+
+#: Controller/UsersController.php:56;77
+msgid "The user could not be saved. Please, try again."
+msgstr "Пользователь не сохранен, попробуйте еще раз."
+
+#: Controller/UsersController.php:99
+msgid "The user has been deleted."
+msgstr "Пользователь удален"
+
+#: Controller/UsersController.php:101
+msgid "The user could not be deleted. Please, try again."
+msgstr "Пользователь не удален. Попробуйте еще раз."
+
+#: Controller/UsersController.php:123
+msgid "Username or password is incorrect"
+msgstr "Имя пользователя или пароль неверные"
+
+#: Lib/Application.php:41
+msgid "Account was credited on %.2f"
+msgstr "Счет пополнен на %.2f у.е."
+
+#: View/Events/index.ctp:2
+#: View/Layouts/default.ctp:62
+msgid "Events"
+msgstr "События"
+
+#: View/Events/index.ctp:12
+#: View/Events/view.ctp:42
+#: View/Payments/index.ctp:22;64
+#: View/Payments/view.ctp:77
+#: View/Users/add.ctp:14
+#: View/Users/edit.ctp:15
+#: View/Users/index.ctp:11;46
+#: View/Users/view.ctp:37
+msgid "Actions"
+msgstr "Действия"
+
+#: View/Events/index.ctp:29
+#: View/Payments/index.ctp:42
+#: View/Users/index.ctp:23
+msgid "View"
+msgstr "Просмотр"
+
+#: View/Events/index.ctp:38
+#: View/Payments/index.ctp:51
+#: View/Users/index.ctp:34
+msgid "Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}"
+msgstr "Страница {:page} из {:pages}, {:current} Записей из {:count}, начиная с {:start} по {:end}"
+
+#: View/Events/index.ctp:43
+#: View/Payments/index.ctp:56
+#: View/Users/index.ctp:39
+msgid "previous"
+msgstr "предыдущий"
+
+#: View/Events/index.ctp:45
+#: View/Payments/index.ctp:58
+#: View/Users/index.ctp:41
+msgid "next"
+msgstr "следующий"
+
+#: View/Events/view.ctp:2
+msgid "Event"
+msgstr "Событие"
+
+#: View/Events/view.ctp:4
+#: View/Payments/view.ctp:14
+#: View/Users/view.ctp:4
+msgid "Id"
+msgstr "Id"
+
+#: View/Events/view.ctp:9
+#: View/Payments/view.ctp:34
+msgid "Account"
+msgstr "Лицевой счет"
+
+#: View/Events/view.ctp:14
+#: View/Payments/view.ctp:19
+msgid "Terminal"
+msgstr "Терминал"
+
+#: View/Events/view.ctp:19
+#: View/Payments/view.ctp:24
+msgid "Service"
+msgstr "Услуга"
+
+#: View/Events/view.ctp:24
+msgid "Description"
+msgstr "Описание"
+
+#: View/Events/view.ctp:29
+#: View/Payments/view.ctp:64
+#: View/Users/view.ctp:24
+msgid "Created"
+msgstr "Создан"
+
+#: View/Events/view.ctp:34
+#: View/Payments/view.ctp:69
+#: View/Users/view.ctp:29
+msgid "Modified"
+msgstr "Изменен"
+
+#: View/Events/view.ctp:44
+msgid "List Events"
+msgstr "Список событий"
+
+#: View/Layouts/default.ctp:50
+msgid "Menu"
+msgstr "Меню"
+
+#: View/Layouts/default.ctp:56
+msgid "Summary"
+msgstr "Итоги"
+
+#: View/Layouts/default.ctp:59
+msgid "Reports"
+msgstr "Отчет"
+
+#: View/Layouts/default.ctp:61
+#: View/Payments/index.ctp:10
+msgid "Payments"
+msgstr "Платежи"
+
+#: View/Layouts/default.ctp:67
+msgid "Config"
+msgstr "Настройка"
+
+#: View/Layouts/default.ctp:69
+msgid "Terminals"
+msgstr "Терминалы"
+
+#: View/Layouts/default.ctp:70
+msgid "Services"
+msgstr "Услуги"
+
+#: View/Layouts/default.ctp:71
+#: View/Users/index.ctp:2
+msgid "Users"
+msgstr "Пользователи"
+
+#: View/Payments/index.ctp:66
+#: View/Payments/view.ctp:112
+msgid "List Terminals"
+msgstr "Список терминалов"
+
+#: View/Payments/index.ctp:67
+#: View/Payments/view.ctp:113
+msgid "List Services"
+msgstr "Список услуг"
+
+#: View/Payments/summary.ctp:47;56
+msgid "Count"
+msgstr "Количество"
+
+#: View/Payments/summary.ctp:48;57
+#: View/Payments/view.ctp:39
+msgid "Amount"
+msgstr "Сумма"
+
+#: View/Payments/summary.ctp:90
+msgid "Total"
+msgstr "Итог"
+
+#: View/Payments/view.ctp:12
+msgid "Payment"
+msgstr "Платеж"
+
+#: View/Payments/view.ctp:29
+msgid "Receipt"
+msgstr "Чек"
+
+#: View/Payments/view.ctp:44
+msgid "Provider Date"
+msgstr "Дата"
+
+#: View/Payments/view.ctp:49
+msgid "Status"
+msgstr "Статус"
+
+#: View/Payments/view.ctp:54
+msgid "Ip"
+msgstr "IP"
+
+#: View/Payments/view.ctp:59
+msgid "Reqid"
+msgstr "Reqid"
+
+#: View/Payments/view.ctp:83
+msgid "Cancel Payment"
+msgstr "Отменить платеж"
+
+#: View/Payments/view.ctp:86
+msgid "Are you sure you want to cancel # %s?"
+msgstr "Вы уверены, что хотите отменить платеж # %s?"
+
+#: View/Payments/view.ctp:94
+msgid "New account"
+msgstr "Новый лицевой счет"
+
+#: View/Payments/view.ctp:97
+msgid "Transfer"
+msgstr "Корректировка"
+
+#: View/Payments/view.ctp:111
+msgid "List Payments"
+msgstr "Список платежей"
+
+#: View/Users/add.ctp:4
+msgid "Add User"
+msgstr "Добавить пользователя"
+
+#: View/Users/add.ctp:11
+#: View/Users/edit.ctp:12
+msgid "Submit"
+msgstr "Отправить"
+
+#: View/Users/add.ctp:17
+#: View/Users/edit.ctp:19
+#: View/Users/view.ctp:41
+msgid "List Users"
+msgstr "Список пользователей"
+
+#: View/Users/edit.ctp:4
+#: View/Users/view.ctp:39
+msgid "Edit User"
+msgstr "Изменить пользователя"
+
+#: View/Users/edit.ctp:18
+#: View/Users/index.ctp:25
+msgid "Delete"
+msgstr "Удалить"
+
+#: View/Users/edit.ctp:18
+#: View/Users/index.ctp:25
+#: View/Users/view.ctp:40
+msgid "Are you sure you want to delete # %s?"
+msgstr "Вы уверены, что хотите удалить # %s?"
+
+#: View/Users/index.ctp:24
+msgid "Edit"
+msgstr "Изменить"
+
+#: View/Users/index.ctp:48
+#: View/Users/view.ctp:42
+msgid "New User"
+msgstr "Новый пользователь"
+
+#: View/Users/view.ctp:2
+msgid "User"
+msgstr "Пользователь"
+
+#: View/Users/view.ctp:9
+msgid "Name"
+msgstr "Имя"
+
+#: View/Users/view.ctp:14
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: View/Users/view.ctp:19
+msgid "Password"
+msgstr "Пароль"
+
+#: View/Users/view.ctp:40
+msgid "Delete User"
+msgstr "Удалить пользователя"
+
