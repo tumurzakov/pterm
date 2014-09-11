@@ -10,12 +10,17 @@ class CronController extends AppController {
     public $uses = array('Payment');
     public $layout = 'ajax';
 
+    public function beforeFilter() {
+        $this->Auth->allow();
+    }
+
     public function index() {
-        $app = new Application();
         $payments = $this->Payment->get('not confirmed');
         foreach($payments as $payment) {
             try {
+                $app = new Application();
                 $app->pay(
+                    $payment['Payment']['service_id'],
                     $payment['Payment']['receipt'],
                     $payment['Payment']['account'],
                     $payment['Payment']['amount']
@@ -28,10 +33,13 @@ class CronController extends AppController {
             $this->Payment->save($payment);
         }
 
-        $payments = $this->Payment->get('not conceled');
+        $payments = $this->Payment->get('not canceled');
         foreach($payments as $payment) {
             try {
-                $app->cancel($payment['Payment']['receipt']);
+                $app = new Application();
+                $app->cancel(
+                    $payment['Payment']['service_id'],
+                    $payment['Payment']['receipt']);
                 $payment['Payment']['status'] = 'canceled';
             } catch(Exception $e) {
                 $payment['Payment']['status'] = 'cancel failed';

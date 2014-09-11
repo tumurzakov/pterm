@@ -11,25 +11,18 @@ class NeotechController extends AppController {
     protected $terminal_id = 0;
 
     public function beforeFilter() {
+        $this->terminal = $this->Payment->Terminal->findById($this->terminal_id);
         $this->Auth->allow('data');
     }
 
-    public function index() {
-    }
-
     public function data() {
+
+        $op = $qid = "";
+
         try {
             CakeSession::write('reqid', String::uuid());
 
-            if (Configure::read('debug')) {
-                foreach($_SERVER as $var=>$val) {
-                    PaymentLog::log("$var=$val");
-                }
-
-                foreach($_REQUEST as $var=>$val) {
-                    PaymentLog::log("$var=$val");
-                }
-            }
+            $this->check_terminal();
 
             $requestXml = $this->request->input();
             PaymentLog::log("request: $requestXml");
@@ -39,17 +32,9 @@ class NeotechController extends AppController {
             $op = @$xml->HEAD->attributes()->OP;
             $qid = @$xml->HEAD->attributes()->QID;
             $dts = @$xml->HEAD->attributes()->DTS;
-            $opqid = "{$this->terminal_id}-$op-$qid";
 
-            $HEAD = array(
-                '@OP' => $op,
-                '@SID' => $this->sid,
-                '@DTS' => strftime("%F %T", time()),
-                '@QM' => ""
-            );
-
-            $request = $this->NeotechRequest->get($this->terminal_id, $opqid);
-            $response = $this->NeotechResponse->get($this->terminal_id, $opqid);
+            $request = $this->NeotechRequest->get($this->terminal_id, $qid);
+            $response = $this->NeotechResponse->get($this->terminal_id, $qid);
 
             if (!empty($request)) {
                 if (!empty($response)) {
@@ -58,12 +43,11 @@ class NeotechController extends AppController {
                     exit;
                 } else {
                     PaymentLog::log("Error: payment already in process");
-                    $BODY = array('@MSG' => 'TRY AGAIN', '@STATUS' => 400);
-                    $this->out($opqid, $HEAD, $BODY);
+                    throw new TerminalException(400, 'TRY AGAIN');
                 }
             }
 
-            $this->NeotechRequest->add($this->terminal_id, $opqid, $requestXml);
+            $this->NeotechRequest->add($this->terminal_id, $qid, $requestXml);
 
             list($status, $msg) =  array("", "");
             if ($op == 'QE11') {
@@ -74,38 +58,25 @@ class NeotechController extends AppController {
                 $service_id = @$xml->BODY->attributes()->SERVICE_ID;
                 $account = @$xml->BODY->attributes()->PARAM1;
                 $amount = @$xml->BODY->attributes()->SUM;
-
-                list($status, $msg) = $this->pay($opqid, $service_id, $account, $amount, $dts);
+                list($status, $msg) = $this->pay($qid, $service_id, $account, $amount, $dts);
             } else if ($op == 'PR09') {
-                $cancel_qid = @$xml->BODY->attributes()->QID;
-                list($status, $msg) = $this->cancel($cancel_qid);
+                $cancel = @$xml->BODY->attributes()->CANCEL;
+                list($status, $msg) = $this->cancel($cancel);
             } else {
                 PaymentLog::log("Error: operation not found");
-                $BODY = array('@MSG' => "UNKNOWN OPERATION", '@STATUS' => 400);
-                $this->out($opqid, $HEAD, $BODY);
+                throw new TerminalException(400, 'UNKNOWN OPERATION');
             }
 
-            $BODY = array(
-                '@MSG' => $msg,
-                '@STATUS' => $status,
-            );
+            $this->success($status, $msg, $op, $qid);
 
-            PaymentLog::log("Done msg=$msg status=$status");
-            $this->out($opqid, $HEAD, $BODY);
+        } catch(TerminalException $e) {
+
+            $this->error($e->status, $e->getMessage(), $op, $qid);
+
         } catch(Exception $e) {
-            $HEAD = array(
-                '@OP' => "",
-                '@SID' => $this->sid,
-                '@DTS' => strftime("%F %T", time()),
-                '@QM' => ""
-            );
 
-            $BODY = array(
-                '@MSG' => 'Internal Error [' . $e->getMessage() .']',
-                '@STATUS' => 400,
-            );
-
-            $this->out("", $HEAD, $BODY, true);
+            PaymentLog::log($e->getTraceAsString());
+            $this->error(400, 'Internal Error [' . $e->getMessage() .']', $op, $qid);
         }
     }
 
@@ -126,18 +97,18 @@ class NeotechController extends AppController {
     }
 
     protected function check($service_id, $account) {
-        PaymentLog::log("Processing cancelation $service_id, $account");
+        PaymentLog::log("Processing validation $service_id, $account");
+
+        $this->check_service($service_id);
 
         $result = array(200, "SUCCESS");
 
-        $app = new Application();
         try {
-            $app->check($account);
+            $app = new Application();
+            $app->check($service_id, $account);
         } catch (Exception $e) {
-            $result =  array(420, "ACCOUNT NOT FOUND");
+            throw new TerminalException(420, "ACCOUNT NOT FOUND");
         }
-
-        $this->Event->add($this->terminal_id, $service_id, $account, __('Validation -> %s', $result[1]));
 
         return $result;
     }
@@ -152,28 +123,78 @@ class NeotechController extends AppController {
         $payment['reqid'] = CakeSession::read('reqid');
         $payment['terminal_id'] = $this->terminal_id;
         $payment['ip'] = $_SERVER['REMOTE_ADDR'];
-        $this->Payment->add($payment);
-
-        $this->Event->add($this->terminal_id, $service_id, $account, __('Payment (amount=%.2f) -> %s', $amount, $result[1]));
+        $this->Payment->add(array('Payment'=>$payment));
 
         return $result;
     }
 
     protected function cancel($qid) {
         PaymentLog::log("Processing cancelation $qid");
-
-        $result = array(250, "SUCCESS");
-        $account  = "";
+        
+        $payment = $this->Payment->getByQid($this->terminal_id, $qid);
 
         try {
-            $payment = $this->Payment->cancel($this->terminal_id, $qid);
-            $account = $payment['Payment']['account'];
+            $app = new Application();
+            $app->check_cancel(
+                $payment['Payment']['service_id'], 
+                $payment['Payment']['account'], 
+                $payment['Payment']['amount']);
         } catch(Exception $e) {
-            $result = array(420, $e->getMessage());
+            throw new TerminalException(420, $e->getMessage());
         }
 
-        $this->Event->add($this->terminal_id, $service_id, $account, __('Cancelation -> %s', $result[1]));
+        $result = array(250, "SUCCESS");
+        $payment = $this->Payment->cancel($payment['Payment']['id']);
+        $account = $payment['Payment']['account'];
 
         return $result;
+    }
+
+    private function check_terminal() {
+        if (empty($this->terminal['Terminal']['ip']) ||
+            $_SERVER['REMOTE_ADDR'] != $this->terminal['Terminal']['ip']) {
+            throw new TerminalException(420, 'ACCESS DENIED');
+        }
+    }
+
+    private function check_service($service_id) {
+        $service = $this->Payment->Service->findById($service_id);
+        if (!$service['Service']['active']) {
+            throw new TerminalException(420, 'SERVICE INACTIVE');
+        }
+    }
+
+    private function success($status, $msg, $op, $qid) {
+        $HEAD = array(
+            '@OP' => $op,
+            '@SID' => $this->sid,
+            '@DTS' => strftime("%F %T", time()),
+            '@QM' => ""
+        );
+
+        $BODY = array(
+            '@MSG' => $msg,
+            '@STATUS' => $status,
+        );
+
+        PaymentLog::log("Done msg=$msg status=$status");
+        $this->out($qid, $HEAD, $BODY);
+    }
+
+    private function error($status, $msg, $op, $qid) {
+        $HEAD = array(
+            '@OP' => $op,
+            '@SID' => $this->sid,
+            '@DTS' => strftime("%F %T", time()),
+            '@QM' => ""
+        );
+
+        $BODY = array(
+            '@MSG' => $msg,
+            '@STATUS' => $status,
+        );
+
+        PaymentLog::log("Error msg=$msg status=$status");
+        $this->out($qid, $HEAD, $BODY);
     }
 }

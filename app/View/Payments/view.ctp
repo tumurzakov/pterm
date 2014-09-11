@@ -75,6 +75,8 @@
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
+
+    <?php if($payment['Terminal']['cancel_allowed']): ?>
     <div class='row'>
         <?php if ($payment['Payment']['status'] == 'confirmed'):?>
         <div class='large-3 columns'>
@@ -103,6 +105,8 @@
         <?php endif; ?>
 
     </div>
+    <?php endif; ?>
+
 	<ul>
 		<li><?php echo $this->Html->link(__('List Payments'), array('action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('List Terminals'), array('controller' => 'terminals', 'action' => 'index')); ?> </li>

@@ -112,7 +112,8 @@ CREATE TABLE IF NOT EXISTS `terminals` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(100) NOT NULL,
   `active` int(11) NOT NULL default '1',
-  `deposit` int(11) NOT NULL default 0,
+  `ip` varchar(15) NOT NULL,
+  `cancel_allowed` int(11) NOT NULL default '1',
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   PRIMARY KEY  (`id`)

@@ -27,11 +27,11 @@ class NeotechShell extends AppShell {
 
     public function cancel() {
         if (count($this->args) != 3) return;
-        list($url, $qid, $account) = $this->args;
+        list($url, $qid, $cancel) = $this->args;
         $this->out("Validate [url=$url qid=$qid cancel=$cancel]");
 
         $request = 
-            "<?xml version='1.0'?><XML><BODY QID='$cancel'/>".
+            "<?xml version='1.0'?><XML><BODY CANCEL='$cancel'/>".
             "<HEAD OP='PR09' SID='OSPP' QID='$qid'/></XML>";
         $this->request($url, $request);
     }

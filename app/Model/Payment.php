@@ -17,38 +17,52 @@ class Payment extends AppModel {
         ));
     }
 
+    public function getByQid($terminal_id, $opqid) {
+        $payment = $this->find('first', array(
+            'conditions'=>array(
+                'status'=>'confirmed',
+                'terminal_id'=>$terminal_id,
+                'receipt'=>$opqid
+            )
+        ));
+
+        if (empty($payment)) {
+            throw new TerminalException(420, "PAYMENT NOT FOUND");
+        }
+
+        return $payment;
+    }
+
     public function add($payment) {
-        $payment['status'] = 'not confirmed';
+        $this->check_activity($payment);
+
+        $payment['Payment']['status'] = 'not confirmed';
 
         $this->create();
         $this->set($payment);
         $this->save();
     }
 
-    public function cancel($terminal_id, $qid) {
-        $payment = $this->find('first', array(
-            'conditions'=>array(
-                'status'=>'confirmed',
-                'terminal_id'=>$terminal_id,
-                'qid'=>$qid
-            )
-        ));
+    public function cancel($id) {
+        $payment = $this->read(null, $id);
 
-        if (empty($payment)) {
-            throw new Exception("Payment not found");
+        $this->check_activity($payment);
+        if (!$payment['Terminal']['cancel_allowed']) {
+            throw new Exception('CANCEL DENIED');
         }
 
-        $this->cancelById($payment['Payment']['id']);
-    }
-
-    public function cancelById($id) {
-        $this->id = $id;
-        $this->setField('status', 'not canceled');
+        $this->saveField('status', 'not canceled');
     }
 
     public function transfer($id, $account) {
         $payment = $this->read(null, $id);
-        $this->setField('status', 'not canceled');
+
+        $this->check_activity($payment);
+        if (!$payment['Terminal']['cancel_allowed']) {
+            throw new Exception('CANCEL DENIED');
+        }
+
+        $this->saveField('status', 'not canceled');
 
         unset($payment['Payment']['id']);
         $payment['Payment']['account'] = $account;
@@ -57,5 +71,25 @@ class Payment extends AppModel {
         $this->create();
         $this->set($payment['Payment']);
         $this->save();
+    }
+
+    private function check_activity($payment) {
+        $terminal = $payment;
+        if (!isset($terminal['Terminal'])) {
+            $terminal = $this->Terminal->findById($payment['Payment']['terminal_id']);
+        }
+
+        $service = $payment;
+        if (!isset($service['Service'])) {
+            $service = $this->Service->findById($payment['Payment']['service_id']);
+        }
+
+        if (!$terminal['Terminal']['active']) {
+            throw new Exception('TERMINAL INACTIVE');
+        }
+
+        if (!$service['Service']['active']) {
+            throw new Exception('SERVICE INACTIVE');
+        }
     }
 }

@@ -59,10 +59,16 @@ class PaymentsController extends AppController {
 
 	public function cancel($id = null) {
         $payment = $this->Payment->findById($id);
+        
         if ($payment) {
             if ($payment['Payment']['status'] == 'confirmed') {
 
-                $this->Payment->cancelById($id);
+                try {
+                    $this->Payment->cancel($id);
+                } catch(TerminalException $e) {
+                    $this->setFlash(__($e->getMessage()));
+                    $this->redirect(array('action'=>'view', $id));
+                }
 
                 $this->Event->add(
                     $payment['Payment']['terminal_id'], 
@@ -76,6 +82,8 @@ class PaymentsController extends AppController {
 
 	public function transfer($id = null) {
 
+        $payment = $this->Payment->findById($id);
+
         if ($this->request->is('post')) {
 
             $account = $this->data['Payment']['account'];
@@ -84,7 +92,7 @@ class PaymentsController extends AppController {
                 $app = new Application();
                 $app->check($account);
             } catch(Exception $e) {
-                $this->setFlash(__('Account %s not found', $account));
+                $this->setFlash(__($e->getMessage()));
                 $this->redirect(array('action'=>'view', $id));
             }
 
@@ -93,7 +101,12 @@ class PaymentsController extends AppController {
             if ($payment) {
                 if ($payment['Payment']['status'] == 'confirmed') {
 
-                    $this->Payment->transfer($id, $account);
+                    try {
+                        $this->Payment->transfer($id, $account);
+                    } catch(TerminalException $e) {
+                        $this->setFlash(__($e->getMessage()));
+                        $this->redirect(array('action'=>'view', $id));
+                    }
 
                     $this->Event->add(
                         $payment['Payment']['terminal_id'], 

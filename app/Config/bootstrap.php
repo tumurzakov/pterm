@@ -112,3 +112,5 @@ CakeLog::config('payments', array(
 ));
 
 CakePlugin::load('DebugKit');
+
+App::uses('TerminalException', 'Lib');
