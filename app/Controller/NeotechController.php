@@ -10,6 +10,10 @@ class NeotechController extends AppController {
     protected $sid = "";
     protected $terminal_id = 0;
 
+    public function beforeFilter() {
+        $this->Auth->allow('data');
+    }
+
     public function index() {
     }
 
@@ -97,11 +101,11 @@ class NeotechController extends AppController {
             );
 
             $BODY = array(
-                '@MSG' => 'Internal Error',
+                '@MSG' => 'Internal Error [' . $e->getMessage() .']',
                 '@STATUS' => 400,
             );
 
-            $this->out($opqid, $HEAD, $BODY, true);
+            $this->out("", $HEAD, $BODY, true);
         }
     }
 
