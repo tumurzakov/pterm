@@ -151,7 +151,7 @@ class NeotechController extends AppController {
     }
 
     private function check_terminal() {
-        if (empty($this->terminal['Terminal']['ip']) ||
+        if (!empty($this->terminal['Terminal']['ip']) &&
             $_SERVER['REMOTE_ADDR'] != $this->terminal['Terminal']['ip']) {
             throw new TerminalException(420, 'ACCESS DENIED');
         }
