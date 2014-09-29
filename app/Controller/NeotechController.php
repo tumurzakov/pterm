@@ -38,10 +38,12 @@ class NeotechController extends AppController {
             if (!empty($request)) {
                 if (!empty($response)) {
                     PaymentLog::log("Answering with found response");
+                    $this->Event->add($this->terminal_id, 0, 0, __('Terminal sent duplicated request'));
                     print $response['NeotechResponse']['body'];
                     exit;
                 } else {
                     PaymentLog::log("Error: payment already in process");
+                    $this->Event->add($this->terminal_id, 0, 0, __('Terminal sent request while previous was not processed yet'));
                     throw new TerminalException(400, 'TRY AGAIN');
                 }
             }
@@ -106,8 +108,11 @@ class NeotechController extends AppController {
             $app = new Application();
             $app->check($service_id, $account);
         } catch (Exception $e) {
+            $this->Event->add($this->terminal_id, $service_id, $account, __('Validation SERVICE_ID=%s ACCOUNT=%s ACCOUNT NOT FOUND', $service_id, $account));
             throw new TerminalException(420, "ACCOUNT NOT FOUND");
         }
+
+        $this->Event->add($this->terminal_id, $service_id, $account, __('Validation SERVICE_ID=%s ACCOUNT=%s SUCCESS', $service_id, $account));
 
         return $result;
     }
@@ -126,9 +131,11 @@ class NeotechController extends AppController {
             $payment['ip'] = $_SERVER['REMOTE_ADDR'];
             $this->Payment->add(array('Payment'=>$payment));
         } catch (Exception $e) {
+            $this->Event->add($this->terminal_id, $service_id, $account, __('Payment SERVICE_ID=%s ACCOUNT=%s AMOUNT=%s ERROR', $service_id, $account, $amount));
             throw new TerminalException(420, $e->getMessage());
         }
 
+        $this->Event->add($this->terminal_id, $service_id, $account, __('Payment SERVICE_ID=%s ACCOUNT=%s AMOUNT=%s SUCCESS', $service_id, $account, $amount));
 
         return $result;
     }
@@ -145,12 +152,15 @@ class NeotechController extends AppController {
                 $payment['Payment']['account'], 
                 $payment['Payment']['amount']);
         } catch(Exception $e) {
+            $this->Event->add($this->terminal_id, $service_id, $account, __('Cancel QID=%s ERROR', $qid));
             throw new TerminalException(420, $e->getMessage());
         }
 
         $result = array(250, "SUCCESS");
         $payment = $this->Payment->cancel($payment['Payment']['id']);
         $account = $payment['Payment']['account'];
+
+        $this->Event->add($this->terminal_id, $service_id, $account, __('Cancel QID=%s SUCCESS', $qid));
 
         return $result;
     }
