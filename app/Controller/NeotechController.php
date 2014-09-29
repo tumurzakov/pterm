@@ -16,7 +16,6 @@ class NeotechController extends AppController {
     }
 
     public function data() {
-
         $op = $qid = "";
 
         try {
@@ -116,14 +115,20 @@ class NeotechController extends AppController {
     protected function pay($qid, $service_id, $account, $amount, $provider_date) {
         PaymentLog::log("Processing payment $qid, $service_id, $account, $amount, $provider_date");
 
-        $result = array(250, "SUCCESS");
+	$this->check($service_id, $account);
 
-        $payment = compact('service_id', 'account', 'amount', 'provider_date');
-        $payment['receipt'] = $qid;
-        $payment['reqid'] = CakeSession::read('reqid');
-        $payment['terminal_id'] = $this->terminal_id;
-        $payment['ip'] = $_SERVER['REMOTE_ADDR'];
-        $this->Payment->add(array('Payment'=>$payment));
+        $result = array(250, "SUCCESS");
+        try {
+            $payment = compact('service_id', 'account', 'amount', 'provider_date');
+            $payment['receipt'] = $qid;
+            $payment['reqid'] = CakeSession::read('reqid');
+            $payment['terminal_id'] = $this->terminal_id;
+            $payment['ip'] = $_SERVER['REMOTE_ADDR'];
+            $this->Payment->add(array('Payment'=>$payment));
+        } catch (Exception $e) {
+            throw new TerminalException(420, $e->getMessage());
+        }
+
 
         return $result;
     }

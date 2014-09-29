@@ -6,6 +6,8 @@
 */
 
 class NeotechShell extends AppShell {
+    private $service_id = 1;
+
     public function main() {
         $this->out('Neotech protocol client');
         $this->hr();
@@ -20,7 +22,7 @@ class NeotechShell extends AppShell {
         $this->out("Validate [url=$url qid=$qid account=$account]");
 
         $request = 
-            "<?xml version='1.0'?><XML><BODY  SERVICE_ID='1' PARAM1='$account'/>".
+            "<?xml version='1.0'?><XML><BODY  SERVICE_ID='{$this->service_id}' PARAM1='$account'/>".
             "<HEAD OP='QE11' SID='OSPP' QID='$qid'/></XML>";
         $this->request($url, $request);
     }
@@ -42,7 +44,7 @@ class NeotechShell extends AppShell {
         $this->out("Validate [url=$url qid=$qid account=$account amount=$amount date=$date]");
 
         $request = 
-            "<?xml version='1.0'?><XML><BODY SERVICE_ID='1' SUM='$amount' PARAM1='$account'/>".
+            "<?xml version='1.0'?><XML><BODY SERVICE_ID='{$this->service_id}' SUM='$amount' PARAM1='$account'/>".
             "<HEAD OP='QE10' SID='OSPP' QID='$qid' DTS='$date'/></XML>";
         $this->request($url, $request);
     }
