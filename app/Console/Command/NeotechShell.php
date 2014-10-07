@@ -14,6 +14,7 @@ class NeotechShell extends AppShell {
         $this->out('cake neotech validate <url> <qid> <account>');
         $this->out('cake neotech pay <url> <qid> <account> <amount> <date>');
         $this->out('cake neotech cancel <url> <qid>');
+        $this->out('cake neotech cron');
     }
 
     public function validate() {
@@ -30,7 +31,7 @@ class NeotechShell extends AppShell {
     public function cancel() {
         if (count($this->args) != 3) return;
         list($url, $qid, $cancel) = $this->args;
-        $this->out("Validate [url=$url qid=$qid cancel=$cancel]");
+        $this->out("Cancel [url=$url qid=$qid cancel=$cancel]");
 
         $request = 
             "<?xml version='1.0'?><XML><BODY CANCEL='$cancel'/>".
@@ -41,12 +42,16 @@ class NeotechShell extends AppShell {
     public function pay() {
         if (count($this->args) != 5) return;
         list($url, $qid, $account, $amount, $date) = $this->args;
-        $this->out("Validate [url=$url qid=$qid account=$account amount=$amount date=$date]");
+        $this->out("Pay [url=$url qid=$qid account=$account amount=$amount date=$date]");
 
         $request = 
             "<?xml version='1.0'?><XML><BODY SERVICE_ID='{$this->service_id}' SUM='$amount' PARAM1='$account'/>".
             "<HEAD OP='QE10' SID='OSPP' QID='$qid' DTS='$date'/></XML>";
         $this->request($url, $request);
+    }
+
+    public function cron() {
+        $this->request('http://terminal.miglotto.kg/pterm/cron', '');
     }
 
     private function request($url, $request) {
